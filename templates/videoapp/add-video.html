@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload Video</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/add-video.css' %}">
+</head>
+<body>
+  <header>
+    <h1>Django is the best</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Main</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <main>
+    <div class="upload-container">
+      <h2>Upload Video</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <label for="video-file">Video File:</label>
+        <input type="file" id="video-file" name="video-file">
+
+        <label for="video-thumbnail">Thumbnail:</label>
+        <input type="file" id="video-thumbnail" name="video-thumbnail">
+        
+        <label for="video-title">Video Title:</label>
+        <textarea id="'video-title" name="'video-title"></textarea>
+
+        <label for="video-description">Description:</label>
+        <textarea id="video-description" name="video-description"></textarea>
+
+      
+        
+        <button type="submit">Upload</button>
+      </form>
+    </div>
+  </main>
+  
+  <footer>
+    <p>© 2023 Video Hosting. All rights reserved.</p>
+  </footer>
+</body>
+</html>
+

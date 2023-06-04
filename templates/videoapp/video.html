@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Django is the best</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/video.css' %}">
+</head>
+<body>
+  <header>
+    <h1>Django is the best</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Main</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="video-details">
+      <h2>{{ video.title }}</h2>
+      <p>{{ video.description }}</p>
+      <p>Created at {{ video.created_at }}</p>
+    </div>
+
+    <video
+      id="my-video"
+      class="video-js"
+      controls
+      preload="auto"
+      width="1000"
+      height="800"
+      >
+      <source src="/media/{{ video.file }}" type="video/mp4">
+      <source src="/media/{{ video.file }}" type="video/webm">
+    </video>
+    <form class="like-form" action="{% url 'like' video.pk %}" method="POST" id="likeid">
+      {% csrf_token %}
+      <button type="submit" class="like-button-img" name="likes">
+        <img src="{% static 'likes/icons8-like-16.png' %}">
+      </button>
+      <button type="submit" class="like-button-img", name="dislikes">
+        <img src="{% static 'likes/icons8-dislike-16.png' %}">
+      </button>
+    </form>
+    <form class="comment-form" action="{% url 'comment' video.pk %}" method="POST" id="areaid">
+      {% csrf_token %}
+      {% if user.is_authenticated %}
+      <label for="comment">Leave a comment:</label>
+      <textarea id="comment" name="comment" rows="4" required></textarea>
+      <button type="submit">Add Comment</button>
+      {% endif %}
+    </form>
+    <section class="comments-section">
+      <h3>Comments</h3>
+      <div class="comments" id="comments">
+    </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2023 Video Hosting. All rights reserved.
+  </footer>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script>
+    $.ajax(
+      {
+      url: "{% url 'comment-list-create' %}",
+      method: "GET",
+      headers: {"Content-Type":"application/json"},
+      processData: false,
+      succses: function(json){
+        console.log(json)
+      },
+      error: function(xhr,errormsg,err){
+        console.log(xhr)
+        console.log(errormsg)
+        console.log(err)
+      },
+      complete: function(json){
+        addComments(json.responseJSON)
+        console.log(json.responseJSON)
+      },
+        
+    })
+    function getCookie(name) {
+    const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return cookieValue ? cookieValue.pop() : '';}
+    
+    function addComments(arr){
+      let div = document.getElementById("comments")
+      for (let i of arr){
+        div.innerHTML +=`
+      <br/>
+      <blockquote>
+        ${i.user}
+        {{ comment.created_at}}
+          <strong>
+          <br>
+          ${i.body}
+          <br>
+          <br>
+          </strong>
+      </blockquote>
+      `;
+      }
+    }
+    $("#areaid").on("submit",function(e){
+      e.preventDefault()
+      let comment = $("#comment").val()
+      let div = $("#comments")
+      div.prepend(`      
+      <br/>
+      <blockquote>
+        {{current_user}}
+        {{ comment.created_at}}
+          <strong>
+          <br>
+          ${comment}
+          <br>
+          <br>
+          </strong>
+      </blockquote>`)
+      const csrftoken = getCookie('csrftoken');
+      $.ajax({
+      url: "{% url 'comment-list-create' %}",
+      method: "POST",
+      headers: {"Content-Type":"application/json",'X-CSRFToken': csrftoken},
+      data: JSON.stringify({body:comment,video:'{{ video_id }}'}),
+      processData: false,
+      succses: function(json){
+        console.log(json)
+      },
+      error: function(xhr,errormsg,err){
+        console.log(xhr)
+        console.log(errormsg)
+        console.log(err)
+      },
+      complete: function(json){
+        console.log(json.responseJSON)
+      }
+    })})
+  </script>
+</body>
+</html>

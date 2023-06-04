@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Log in</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/login.css' %}">
+</head>
+<body>
+  <div class="container">
+    <h1>Log in</h1>
+    <form method="post" action="{% url 'login'%}">
+      {% csrf_token %}
+      <div>
+        <label for="id_username">Username:</label>
+        <input type="text" id="id_username" name="username" required>
+      </div>
+      <div>
+        <label for="id_password">Password:</label>
+        <input type="password" id="id_password" name="password" required>
+      </div>
+      <button type="submit">Log In</button>
+    </form>
+    <p>Don't have an account? <a href="/register">Sign up</a></p>
+  </div>
+</body>
+</html>
+

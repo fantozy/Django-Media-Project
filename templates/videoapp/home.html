@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Django is the best</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css' %}">
+</head>
+<body>
+  <header>
+    <h1>Django is the best</h1>
+    <nav>
+      <div class="login-btn">
+        {% if user.is_authenticated %}
+          <a href="/add-video" class="add-video-btn">Add Video</a>
+          <a href="/my-account">My Account</a>
+          <a href="/logout">Log out</a>
+        {% else %}
+          <a href="/login">Log in</a>
+          <a href="/register">Sign up</a>
+        {% endif %}
+      </div>
+      <ul>
+        <li><a href="/">Main</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    {% for video in video_list %}
+    <section class="video">
+      <div class="video-thumbnail">
+        <img src="/media/{{ video.image }}" alt="Video Thumbnail">
+      </div>
+      <div class="video-details">
+        <h2>{{ video.title }}</h2>
+        <p>{{ video.description|slice:100 }}</p>
+        <a href="{{ video.pk }}/{{ video.video }}" class="open-video-btn">Open video</a>
+      </div>
+    </section> 
+    {% endfor %}
+  </main>
+  <footer>
+    <p>© 2023 Video Hosting. All rights reserved.</p>
+  </footer>
+</body>
+</html>

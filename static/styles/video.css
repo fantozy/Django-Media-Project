@@ -1,0 +1,118 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #F7F7F7;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #333;
+  color: #FFF;
+  padding: 20px;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline;
+  margin-right: 10px;
+}
+
+nav ul li a {
+  color: #FFF;
+  text-decoration: none;
+}
+
+main {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.video-details {
+  margin-bottom: 20px;
+}
+
+.video-details h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.video-details p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.video-details .meta-info {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.video-details .meta-info span {
+  margin-right: 10px;
+}
+
+video {
+  height: auto;
+  border-radius: 5px;
+}
+
+.comments-section {
+  margin-top: 20px;
+}
+
+.comments-section h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.comments {
+  margin-bottom: 10px;
+}
+
+.comment-form label {
+  font-size: 16px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.comment-form textarea {
+  width: 100%;
+  height: 100px;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+.comment-form button {
+  background-color: #333;
+  color: #FFF;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.comment-form button:hover {
+  background-color: #555;
+}
+
+footer {
+  background-color: #333;
+  color: #FFF;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+
+
+
+

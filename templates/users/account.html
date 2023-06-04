@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Account</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/account.css' %}">
+</head>
+<body>
+  <header>
+    <h1>My Account</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Main</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Welcome {{ user.username }} <3</h2>
+    {% if user.userprofile.profile_image %}
+      <img src="{{ user.userprofile.profile_image.url }}" alt="Profile Image"
+      style = "width: 10%">
+    {% else %}
+      <img src="/media/user_image/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.webp" alt="Anonymous Profile Image"
+      style = "width: 10%;">
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="profile-image">Profile Image</label>
+      <input type="file" id="profile-image" name="profile-image">
+      <button type="submit">Upload</button>
+    </form> 
+  </main>
+
+  <footer>
+    © 2023 Video Hosting. All rights reserved.
+  </footer>
+</body>
+</html>
+
