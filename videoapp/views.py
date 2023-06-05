@@ -10,6 +10,13 @@ from rest_framework.response import Response
 from .serializers import CommentSerializer, LikeSerializer
 
 
+class CommentListApiView(APIView):
+    def get(self,request,pk):
+        queryset = Comment.objects.filter(video__pk=pk)
+        serializer = CommentSerializer(instance=queryset, many=True)
+        return Response(serializer.data, status = status.HTTP_200_OK)
+
+
 class CommentListCreateAPIView(APIView):
 
     def get(self,request):
@@ -58,6 +65,7 @@ def add_video(request):
         'user': request.user
     }
     if request.method == 'POST':
+        print(request.FILES)
         video_file = request.FILES['video-file']
         video_thumbnail = request.FILES['video-thumbnail']
         description = request.POST['video-description']

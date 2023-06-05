@@ -64,7 +64,7 @@
   <script>
     $.ajax(
       {
-      url: "{% url 'comment-list-create' %}",
+      url: "{% url 'comment-list-create-pk' pk=video.pk %}",
       method: "GET",
       headers: {"Content-Type":"application/json"},
       processData: false,
