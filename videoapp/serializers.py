@@ -15,7 +15,7 @@ class LikeSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     class Meta:
         model = Like
-        fields = ['user', 'likes', 'dislikes', 'video']  
+        fields = ['user', 'video']  
 
     def get_user(self,obj):
         return obj.user.username

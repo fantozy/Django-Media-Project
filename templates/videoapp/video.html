@@ -33,15 +33,16 @@
       <source src="/media/{{ video.file }}" type="video/mp4">
       <source src="/media/{{ video.file }}" type="video/webm">
     </video>
-    <form class="like-form" action="{% url 'like' video.pk %}" method="POST" id="likeid">
+    <p>Likes: {{ likes_count }} </p>
+    <form class="like-form" action="{% if user.is_authenticated %}{% url 'like' video.pk %}{% else %}{% url 'login' %}{% endif %}" method="POST" id="likeid">
       {% csrf_token %}
       <button type="submit" class="like-button-img" name="likes">
         <img src="{% static 'likes/icons8-like-16.png' %}">
       </button>
-      <button type="submit" class="like-button-img", name="dislikes">
+      <button type="submit" class="like-button-img" name="dislikes">
         <img src="{% static 'likes/icons8-dislike-16.png' %}">
       </button>
-    </form>
+    </form>    
     <form class="comment-form" action="{% url 'comment' video.pk %}" method="POST" id="areaid">
       {% csrf_token %}
       {% if user.is_authenticated %}

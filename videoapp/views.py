@@ -57,8 +57,9 @@ def get_list_video(request):
 
 def get_video(request, pk:int):
     _video = get_object_or_404(Video,id=pk)
+    likes_count = Like.objects.filter(video__pk=pk).count()
     current_user = request.user.username
-    return render(request,'videoapp/video.html', {'video' : _video, "current_user" : current_user, "video_id": pk})
+    return render(request,'videoapp/video.html', {'video' : _video, "current_user" : current_user, "video_id": pk, 'likes_count':likes_count})
 
 def add_video(request):
     context = {
@@ -98,20 +99,19 @@ def add_comment(request, pk):
 
 def add_like(request, pk):
     video = get_object_or_404(Video, pk=pk)
-    context = {
-        'video':video 
-    }
     like = Like.objects.filter(video=video).filter(user=request.user)
-    print(like)
+    context = {
+        'video': video,
+    }
     if request.method == "POST":
         if 'likes' in request.POST and not like.exists():
-            Like.objects.create(video=video,user=request.user)
-            
-        return redirect('video', pk=pk)
-    
+            Like.objects.create(video=video, user=request.user)
 
+        return redirect('video', pk=pk)
     video.save()
+    
     return render(request, 'videoapp/video.html', context)
+
 
 def custom_404(request,exception):
     return render(request,'videoapp/errors/404.html', status=404)

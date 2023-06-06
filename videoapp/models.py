@@ -34,10 +34,10 @@ class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
-# class Dislike(models.Model):
-#     video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='likes')
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     dislikes = models.BooleanField(default=False)
+class Dislike(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='dislikes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
 
     
