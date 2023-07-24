@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Video, Comment, Like
+from .models import Video, Comment, Like, Dislike
 from users.models import UserProfile
 
 from rest_framework import status
@@ -58,8 +58,9 @@ def get_list_video(request):
 def get_video(request, pk:int):
     _video = get_object_or_404(Video,id=pk)
     likes_count = Like.objects.filter(video__pk=pk).count()
+    dislikes_count = Dislike.objects.filter(video__pk=pk).count()
     current_user = request.user.username
-    return render(request,'videoapp/video.html', {'video' : _video, "current_user" : current_user, "video_id": pk, 'likes_count':likes_count})
+    return render(request,'videoapp/video.html', {'video' : _video, "current_user" : current_user, "video_id": pk, 'likes_count':likes_count, 'dislikes_count':dislikes_count})
 
 def add_video(request):
     context = {
@@ -103,15 +104,35 @@ def add_like(request, pk):
     context = {
         'video': video,
     }
+    
     if request.method == "POST":
         if 'likes' in request.POST and not like.exists():
             Like.objects.create(video=video, user=request.user)
-
+            Dislike.objects.filter(video=video, user=request.user).delete()
+        elif 'likes' in request.POST and like.exists():
+            like.delete()
         return redirect('video', pk=pk)
     video.save()
     
     return render(request, 'videoapp/video.html', context)
 
+def add_dislike(request, pk):
+    video = get_object_or_404(Video, pk=pk)
+    dislike = Dislike.objects.filter(video=video).filter(user=request.user)
+    context = {
+        'video':video,
+    }
+
+    if request.method == "POST":
+        if 'dislikes' in request.POST and not dislike.exists():
+            Dislike.objects.create(video=video, user=request.user)
+            Like.objects.filter(video=video, user=request.user).delete()
+        elif 'dislikes' in request.POST and dislike.exists():
+            dislike.delete()
+        return redirect('video', pk=pk)
+    video.save()
+    
+    return render(request, 'videoapp/video.html', context)
 
 def custom_404(request,exception):
     return render(request,'videoapp/errors/404.html', status=404)
