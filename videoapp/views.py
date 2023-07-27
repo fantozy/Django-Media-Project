@@ -1,52 +1,59 @@
 from django.contrib.auth import get_user_model
-from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
+from rest_framework import status
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 from .models import Video, Comment, Like, Dislike
 from users.models import UserProfile
+from .serializers import CommentSerializer, LikeSerializer, DislikeSerializer
 
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .serializers import CommentSerializer, LikeSerializer
+class CommentListApiView(ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
+    def get_queryset(self):
+        video_pk = self.kwargs.get('pk')
+        queryset = Comment.objects.filter(video__pk=video_pk)
+        return queryset
 
-class CommentListApiView(APIView):
-    def get(self,request,pk):
-        queryset = Comment.objects.filter(video__pk=pk)
-        serializer = CommentSerializer(instance=queryset, many=True)
-        return Response(serializer.data, status = status.HTTP_200_OK)
+    serializer_class = CommentSerializer
 
+class CommentListCreateAPIView(ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Comment.objects.all().order_by("-created_at")
+    serializer_class = CommentSerializer
 
-class CommentListCreateAPIView(APIView):
+class LikeListAPIView(ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get(self,request):
-        queryset = Comment.objects.all().order_by("-created_at")
-        serializer = CommentSerializer(instance=queryset, many=True)
-        return Response(serializer.data, status = status.HTTP_200_OK)
+    def get_queryset(self):
+        video_pk = self.kwargs.get('pk')
+        queryset = Like.objects.filter(video__pk=video_pk)
+        return queryset
 
-    @csrf_exempt
-    def post(self,request):
-        serializer = CommentSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user)
-        return Response(serializer.data, status = status.HTTP_201_CREATED)
+    serializer_class = LikeSerializer
 
+class LikeListCreateAPIView(ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
 
-class LikeListCreateAPIView(APIView):
+class DislikeListAPIView(ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get(self,request):
-        queryset = Like.objects.all()
-        serializer = LikeSerializer(instance=queryset, many=True)
-        return Response(serializer.data, status = status.HTTP_200_OK)
+    def get_queryset(self):
+        video_pk = self.kwargs.get('pk')
+        queryset = Dislike.objects.filter(video__pk=video_pk)
+        return queryset
+
+    serializer_class = DislikeSerializer
+
+class DislikeListCreateAPIView(ListCreateAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Dislike.objects.all()
+    serializer_class = DislikeSerializer
+
     
-    @csrf_exempt
-    def post(self,request):
-        serializer = LikeSerializer(data=request.data) 
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user)
-        return Response(serializer.data, status = status.HTTP_201_CREATED)
-        
-
 def get_list_video(request):
     video_list = Video.objects.all()
     context = {

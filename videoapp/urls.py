@@ -7,8 +7,11 @@ from .views import (
     add_video,
     add_comment,
     LikeListCreateAPIView,
+    LikeListAPIView,
+    DislikeListCreateAPIView,
+    DislikeListAPIView,
     CommentListApiView,
-    CommentListCreateAPIView
+    CommentListCreateAPIView,
 )
 from django.conf import settings
 from django.conf.urls import handler404
@@ -25,6 +28,9 @@ urlpatterns = [
     path('add-video/', add_video, name='add-video'),
     path('comments/', CommentListCreateAPIView.as_view(), name='comment-list-create'),
     path('comments/<int:pk>/', CommentListApiView.as_view(), name='comment-list-create-pk'),
-    path('likes/', LikeListCreateAPIView.as_view(), name='like-list-create')
+    path('likes/', LikeListCreateAPIView.as_view(), name='like-list-create'),
+    path('likes/<int:pk>/', LikeListAPIView.as_view(), name="like-list-create-pk"),
+    path('dislikes', DislikeListCreateAPIView.as_view(), name='dislike-list-create'),
+    path('dislikes/<int:pk>/', DislikeListAPIView.as_view(),name='dislike-list-create-pk'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
